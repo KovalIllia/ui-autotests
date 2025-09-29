@@ -1,69 +1,39 @@
-import time
+import random
 
-from selenium import webdriver
 from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
+
+from tests.conftest import fake, password
 
 
 class TestLogin:
 
-    def test_register_user(self):
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-
+    def test_register_user(self, driver, fake,password):
         driver.get("http://automationexercise.com")
-        # потрібно створити даний степ --- Verify that home page is visible successfully
+        assert driver.title == "Automation Exercise"
+        assert "automationexercise" in driver.current_url
 
+        main_page_login_button = driver.find_element(By.XPATH, "//a[@href='/login']").click()
+        signup_text = WebDriverWait(driver, 5).until(
+            EC.visibility_of_element_located((By.XPATH, "//h2[contains(text(), 'New User Signup!')]"))
+            )
 
-        signup_button = driver.find_element(By.XPATH, "//a[@href='/login']")
-        signup_button.click()
+        assert signup_text.is_displayed()
 
+        signup_login_field = driver.find_element(By.XPATH,
+                                                 "//input[@type='text' and @data-qa='signup-name' and @required]")
+        signup_login_field.send_keys(fake.first_name())
 
+        signup_mail_field = driver.find_element(By.XPATH, "//input[@data-qa='signup-email' and @type='email']")
+        signup_mail_field.send_keys(f"testuser{random.randint(1, 1000)}@gmail.com")
 
+        signup_button = driver.find_element(By.XPATH, "//button[@type='submit'][@data-qa='signup-button']").click()
 
+        new_user_signup_baner = WebDriverWait(driver, 5).until(
+            EC.visibility_of_element_located((By.XPATH, "//b[contains(text(),'Enter Account Information')]")))
+        assert new_user_signup_baner.is_displayed()
 
-
-# registration
-# @pytest.mark.positive
-#     @pytest.mark.parametrize("new_user_data",
-#                              TestDataProvider.generate_user_reg_data(save_user=True))
-#     def test_registration_success_scenario(self, app, new_user_data):
-#         # TestDataProvider.save_created_account(new_user_data["email"], new_user_data["password"])
-#         app.home_page.open_homepage()
-#         app.home_page.click_sign_in()
-#         app.authentication_page.create_account_section.input_email_address(new_user_data["email"])
-#         app.authentication_page.create_account_section.click_button_create_account()
-#         actual = app.authentication_page.get_page_h1_heading_text()
-#         pytest.assume("CREATE AN ACCOUNT" == actual, "Actual:{} ,Expected: {}".format(actual, "CREATE AN ACCOUNT"))
-#         actual = app.authentication_page.personal_info_section.get_section_heading()
-#         pytest.assume("YOUR PERSONAL INFORMATION" == actual,
-#                       "Actual:{} ,Expected: {}".format(actual, "YOUR PERSONAL INFORMATION"))
-#
-#         app.authentication_page.personal_info_section.input_personal_info(new_user_data)
-#         app.authentication_page.personal_info_section.click_button_register()
-#         title = app.authentication_page.get_title()
-#         expected_title = "My account - My Store"
-#         pytest.assume(title == expected_title, "Actual:{} ,Expected: {}".format(title, expected_title))
-#         full_name = app.myaccount_page.get_logged_in_full_name()
-#         expected_full_name = new_user_data["first_name"] + " " + new_user_data["last_name"]
-#         pytest.assume(full_name == expected_full_name.lower(),
-#                       "Actual:{} ,Expected: {}".format(full_name, expected_full_name))
-
-
-#
-# login
-# @pytest.mark.positive
-#     def test_open_homepage(self,app):
-#         app.home_page.open_homepage()
-#         assert("My Store" == app.home_page.get_title())
-#
-#
-#     @pytest.mark.positive
-#     @pytest.mark.parametrize("user_creds,page_title",
-#                              [({"username": "autopracuser1@mailnesia.com", "password": "autoprac1234"},
-#                                "My account - My Store")])
-#     def test_login_success(self, app, user_creds, page_title):
-#         app.home_page.open_homepage()
-#         app.home_page.click_sign_in()
-#         app.authentication_page.login_section.perform_login(user_creds["username"], user_creds["password"])
-#         assert (page_title == app.authentication_page.get_title())
+        tittle_button=driver.find_element(By.XPATH,"//input[@type='radio' and @value='Mr']").click()
+        password_field=driver.find_element(By.XPATH,"//input[@type='password' and @data-qa='password']")
+        password_field.send_keys(password)
