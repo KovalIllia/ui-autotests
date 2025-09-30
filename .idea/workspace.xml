@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4358ed4a-be47-453e-975a-bf59146dc417" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/data_generators.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" afterDir="false" />
+    <list default="true" id="4358ed4a-be47-453e-975a-bf59146dc417" name="Changes" comment="stop at step.9">
+      <change afterPath="$PROJECT_DIR$/utils/form_helper.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/test_register_user.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_register_user.py" afterDir="false" />
     </list>
@@ -94,6 +92,19 @@
       <option name="presentableId" value="Default" />
       <updated>1759086885786</updated>
     </task>
+    <task id="LOCAL-00001" summary="stop at step.9">
+      <option name="closed" value="true" />
+      <created>1759176252590</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1759176252590</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="stop at step.9" />
+    <option name="LAST_COMMIT_MESSAGE" value="stop at step.9" />
   </component>
 </project>

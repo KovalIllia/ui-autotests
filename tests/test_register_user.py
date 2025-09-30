@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 from tests.conftest import fake, password
+from utils.form_helper import FormHelper
 
 
 class TestLogin:
@@ -37,3 +38,19 @@ class TestLogin:
         tittle_button=driver.find_element(By.XPATH,"//input[@type='radio' and @value='Mr']").click()
         password_field=driver.find_element(By.XPATH,"//input[@type='password' and @data-qa='password']")
         password_field.send_keys(password)
+
+        form=FormHelper(driver)
+        form.select_random_day()
+        form.select_random_moth()
+        form.select_random_year()
+
+        newsletter_checkbox=driver.find_element(By.XPATH,"//input[@type='checkbox' and @name='newsletter']").click()
+        special_offers_checkbox=driver.find_element(By.XPATH,"//input[@type='checkbox' and @name='optin']").click()
+
+        """Address Information"""
+        first_name=driver.find_element(By.XPATH,"//input[@data-qa='first_name' and @name='first_name']")
+        first_name.send_keys(fake.first_name())
+
+        last_name=driver.find_element(By.XPATH,"//input[@data-qa='last_name' and @name='last_name']")
+        last_name.send_keys(fake.last_name())
+
