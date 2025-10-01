@@ -1,9 +1,12 @@
-pytest
 requests
-pytest-html
 allure-pytest
 selenium
 Faker
 webdriver-manager
+pytest
+pytest-html
+pytest-xdist
+pytest-mock
+pytest-rerunfailures
 
 # pip install -r requirements.txt
