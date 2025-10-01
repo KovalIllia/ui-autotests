@@ -2,14 +2,13 @@ import random
 import time
 
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.expected_conditions import visibility_of_element_located
 from selenium.webdriver.support.wait import WebDriverWait
 
 from tests.conftest import fake, password
 from utils.data_generators import generate_mobile_number
 from utils.form_helper import FormHelper
-from selenium.webdriver.remote.webelement import WebElement
 
 
 class TestLogin:
@@ -20,15 +19,16 @@ class TestLogin:
         assert "automationexercise" in driver.current_url
 
         main_page_login_button = driver.find_element(By.XPATH, "//a[@href='/login']").click()
-        signup_text : WebElement= WebDriverWait(driver, 5).until(
+        signup_text: WebElement = WebDriverWait(driver, 5).until(
             EC.visibility_of_element_located((By.XPATH, "//h2[contains(text(), 'New User Signup!')]"))
         )
 
         assert signup_text.is_displayed()
 
+        signup_name=fake.first_name()
         signup_login_field = driver.find_element(By.XPATH,
                                                  "//input[@type='text' and @data-qa='signup-name' and @required]")
-        signup_login_field.send_keys(fake.first_name())
+        signup_login_field.send_keys(signup_name)
 
         signup_mail_field = driver.find_element(By.XPATH, "//input[@data-qa='signup-email' and @type='email']")
         signup_mail_field.send_keys(f"testuser{random.randint(1, 1000)}@gmail.com")
@@ -52,8 +52,9 @@ class TestLogin:
         special_offers_checkbox = driver.find_element(By.XPATH, "//input[@type='checkbox' and @name='optin']").click()
 
         """Address Information"""
+        generated_first_name = fake.first_name()
         first_name = driver.find_element(By.XPATH, "//input[@data-qa='first_name' and @name='first_name']")
-        first_name.send_keys(fake.first_name())
+        first_name.send_keys(generated_first_name)
 
         last_name = driver.find_element(By.XPATH, "//input[@data-qa='last_name' and @name='last_name']")
         last_name.send_keys(fake.last_name())
@@ -85,13 +86,25 @@ class TestLogin:
                                                     "//button[@data-qa='create-account' and @class='btn btn-default']").click()
         # time.sleep(1000)
 
-        create_account_visible : WebElement= WebDriverWait(driver, 5).until(EC.visibility_of_element_located(
+        create_account_visible: WebElement = WebDriverWait(driver, 5).until(EC.visibility_of_element_located(
             (By.XPATH, "//h2[@class='title text-center']//b[contains(text(), 'Account Created!')]")))
 
         assert create_account_visible.is_displayed()
-        assert create_account_visible.text.strip()=='ACCOUNT CREATED!'
+        assert create_account_visible.text.strip() == 'ACCOUNT CREATED!'
 
-        continue_button=driver.find_element(By.XPATH,"//a[@data-qa='continue-button' or text()='Continue' or @class='btn btn-primary']")
+        continue_button = driver.find_element(By.XPATH,
+                                              "//a[@data-qa='continue-button' or text()='Continue' or @class='btn btn-primary']")
         continue_button.click()
 
-        time.sleep(1000)
+
+        verify_username = driver.find_element(By.XPATH, "//i[@class='fa fa-user']/..")
+        text_verification = verify_username.text
+        assert f"Logged in as {signup_name}" in text_verification
+
+        delete_button = driver.find_element(By.XPATH, "//a[@href='/delete_account']").click()
+
+        verify_deleted_account: WebElement = WebDriverWait(driver, 5).until(
+            EC.visibility_of_element_located((By.XPATH, "//b[text()='Account Deleted!']/..")))
+
+        assert verify_deleted_account.is_displayed()
+        assert verify_deleted_account.text.strip()=='ACCOUNT DELETED!'
