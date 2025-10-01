@@ -9,7 +9,12 @@ from utils.data_generators import generate_password,generate_mobile_number
 
 @pytest.fixture(scope="function")
 def driver():
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+    options=webdriver.ChromeOptions()
+    options.add_argument("--headless")
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=options)
     driver.maximize_window()
     yield driver
     driver.quit()
