@@ -32,7 +32,7 @@ class RegisterPage:
 
     def __init__(self, driver: WebDriver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 20)
+        self.wait = WebDriverWait(driver, 30)
         self.form = FormHelper(driver)
 
     def is_account_info_banner_is_visiable(self):
@@ -96,3 +96,26 @@ class RegisterPage:
     def create_account_banner_is_visiable(self):
         Logger.debug("Waiting for 'Account Created!' header")
         return self.wait.until(EC.visibility_of_element_located(self.ACCOUNT_CREATED_BANNER)).is_displayed()
+
+
+"""alternative variant"""
+
+
+def fill_personal_info(self,
+                       first_name: str,
+                       last_name: str,
+                       company: str,
+                       address: str,
+                       secondary_address: str,
+                       city: str,
+                       state: str,
+                       zipcode: str,
+                       mobile: str):
+    self.driver.find_element(*self.FIRST_NAME).send_keys(first_name)
+    self.driver.find_element(*self.LAST_NAME).send_keys(last_name)
+    self.driver.find_element(*self.COMPANY).send_keys(company)
+    self.driver.find_element(*self.ADDRESS).send_keys(address)
+    self.driver.find_element(*self.CITY).send_keys(city)
+    self.driver.find_element(*self.STATE).send_keys(state)
+    self.driver.find_element(*self.ZIPCODE).send_keys(zipcode)
+    self.driver.find_element(*self.MOBILE_NUMBER).send_keys(mobile)

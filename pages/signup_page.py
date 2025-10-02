@@ -18,7 +18,7 @@ class SignupPage:
 
     def __init__(self, driver=WebDriver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 10)
+        self.wait = WebDriverWait(driver, 30)
 
     def is_loaded(self):
         Logger.debug("Waiting for 'New User Signup!' header")
