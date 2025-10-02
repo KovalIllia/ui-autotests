@@ -10,12 +10,10 @@ class LogLevel:
 
 class Logger:
     LOG_DIR = "./output/logs"
-    SCREENSHOT_DIR = "./output/screenshots"
     _lock = threading.Lock()
 
     # ensure dirs exist
     os.makedirs(LOG_DIR, exist_ok=True)
-    os.makedirs(SCREENSHOT_DIR, exist_ok=True)
 
     # default file (will be overridden per test by start_test)
     file_name = f"{LOG_DIR}/log_" + datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".log"

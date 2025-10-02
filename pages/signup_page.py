@@ -34,9 +34,10 @@ class SignupPage:
         Logger.info(f"Entered email: {email}")
 
 
-    def submit_button(self):
+    def click_submit_button(self):
         signup_button = self.driver.find_element(*self.SIGNUP_BUTTON).click()
 
 
     def is_account_info_banner_is_visiable(self):
         return self.wait.until(EC.visibility_of_element_located(self.ACCOUNT_INFO_BANNER)).is_displayed()
+

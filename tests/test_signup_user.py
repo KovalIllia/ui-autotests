@@ -21,7 +21,7 @@ def test_signup_user(driver,fake):
     name = fake.first_name()
     email = f"testuser{random.randint(1, 1000)}@gmail.com"
     signup_page.fill_form_for_signup_user(name,email)
-    signup_page.submit_button()
+    signup_page.click_submit_button()
     Logger.info(f"User signed up with name: {name}")
     Logger.info(f"User signed up with name: {email}")
 
