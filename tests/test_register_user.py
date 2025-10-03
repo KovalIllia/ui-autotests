@@ -1,4 +1,7 @@
 import random
+
+import allure
+
 from pages.home_page import HomePage
 from pages.signup_page import SignupPage
 from utils.logger import Logger
@@ -6,7 +9,6 @@ from utils.data_generators import generate_mobile_number
 from pages.register_page import RegisterPage
 
 def test_register_user(driver,fake,password):
-    """Homepage"""
     Logger.info("Navigating to home page")
     home_page=HomePage(driver)
     home_page.open()
@@ -17,7 +19,7 @@ def test_register_user(driver,fake,password):
     Logger.info("Clicking on Signup/Login button")
     home_page.click_signup_login()
 
-    """Signup"""
+
     signup_page=SignupPage(driver)
     assert signup_page.is_loaded(),"Signup page did not load"
 
@@ -53,6 +55,8 @@ def test_register_user(driver,fake,password):
     register_page.fill_mobile_number(mobile_number)
     register_page.create_account_button()
     register_page.create_account_banner_is_visiable()
+
+
     assert register_page.create_account_banner_is_visiable(), "Account Created banner not visible"
 
 

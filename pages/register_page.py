@@ -1,3 +1,4 @@
+import allure
 from selenium.webdriver.common.by import By
 from selenium.webdriver.ie.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
@@ -36,11 +37,14 @@ class RegisterPage:
         self.form = FormHelper(driver)
 
     def is_account_info_banner_is_visiable(self):
-        Logger.debug("Waiting for 'Enter Account Information' header")
-        return self.wait.until(EC.visibility_of_element_located(self.ACCOUNT_INFO_BANNER)).is_displayed()
+        with allure.step("expected banner: 'Enter Account Information'"):
+            Logger.debug("Waiting for 'Enter Account Information' header")
+            return self.wait.until(EC.visibility_of_element_located(self.ACCOUNT_INFO_BANNER)).is_displayed()
 
+    @allure.step("Fill out the registration form with valid data.")
     def choose_gender_button(self):
-        gender_button = self.driver.find_element(*self.GENDER_RADIO_BUTTON).click()
+        with allure.step("expected banner: 'Enter Account Information'"):
+            gender_button = self.driver.find_element(*self.GENDER_RADIO_BUTTON).click()
 
     def fill_password(self, password):
         password = self.driver.find_element(*self.PASSWORD).send_keys(password)
@@ -93,6 +97,7 @@ class RegisterPage:
     def create_account_button(self):
         self.driver.find_element(*self.CREATE_ACCOUNT_BUTTON).click()
 
+    @allure.step("Check the message about successful registration")
     def create_account_banner_is_visiable(self):
         Logger.debug("Waiting for 'Account Created!' header")
         return self.wait.until(EC.visibility_of_element_located(self.ACCOUNT_CREATED_BANNER)).is_displayed()

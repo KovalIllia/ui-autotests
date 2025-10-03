@@ -1,26 +1,32 @@
+import os
+
 import pytest
 from faker import Faker
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 
-from utils.data_generators import generate_password,generate_mobile_number
-import os
-import pytest
+from utils.data_generators import generate_password
 from utils.logger import Logger
+
 
 @pytest.fixture(scope="function")
 def driver():
-    options=webdriver.ChromeOptions()
-    options.add_argument("--headless")
+    options = Options()
+    options.add_argument("--headless=new")
     options.add_argument("--window-size=1920,1080")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    driver = webdriver.Chrome(options=options)
-    driver.maximize_window()
+    options.add_argument("--disable-gpu")
+    options.add_argument("--disable-software-rasterizer")
+    options.binary_location = "/usr/bin/google-chrome"
+
+    service = Service(executable_path=ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=options)
+    driver.implicitly_wait(10)
     yield driver
     driver.quit()
-
 
 @pytest.fixture(scope="function")
 def fake():
