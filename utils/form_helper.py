@@ -1,5 +1,7 @@
 import random
 
+from dataclasses import dataclass
+from faker import Faker
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 
@@ -15,7 +17,7 @@ class FormHelper():
         option.click()
         return desired_day
 
-    def select_random_moth(self):
+    def select_random_month(self):
         desired_month = random.randint(1, 12)
         option = self.driver.find_element(By.XPATH,
                                           f"//select[@data-qa='months' and @name='months']/option[@value='{desired_month}']")
