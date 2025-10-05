@@ -129,7 +129,9 @@ Each page action is logged as a separate **Allure step**:
 * "Enter email and password"
 * "Verify account info banner is visible"
 
-This makes test results **clear and readable**.
+
+📌 Live example: [Allure Report](https://kovalillia.github.io/ui-autotests/)
+
 
 ---
 
@@ -148,9 +150,3 @@ This makes test results **clear and readable**.
 3. Commit changes (`git commit -m 'Add feature'`)
 4. Push (`git push origin feature/my-feature`)
 5. Open Pull Request
-
----
-
-## 📜 License
-
-MIT License – free to use, modify, and share.
