@@ -14,7 +14,6 @@ def test_register_user(driver,fake,password):
     Logger.info("Navigating to home page")
     home_page=HomePage(driver)
     home_page.open()
-
     assert home_page.has_expected_url(), "URL is incorrect"
 
     Logger.info("Clicking on Signup/Login button")
@@ -36,11 +35,10 @@ def test_register_user(driver,fake,password):
     """Register"""
 
     register_page=RegisterPage(driver)
-    user = UserData()
     assert register_page.is_account_info_banner_is_visiable(), "Register page did not load"
 
+    user = UserData()
     register_page.fill_user_data_form(user)
-
     register_page.create_account_button()
 
     assert register_page.create_account_banner_is_visiable(), "Account Created banner not visible"
