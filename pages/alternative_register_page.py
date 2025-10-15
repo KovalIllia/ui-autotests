@@ -37,10 +37,10 @@ class RegisterPage:
         self.wait = WebDriverWait(driver, 30)
         self.form = FormHelper(driver)
 
-    def is_account_info_banner_is_visiable(self):
-        with allure.step("expected banner: 'Enter Account Information'"):
-            Logger.debug("Waiting for 'Enter Account Information' header")
-            return self.wait.until(EC.visibility_of_element_located(self.ACCOUNT_INFO_BANNER)).is_displayed()
+    # def is_account_info_banner_is_visiable(self):
+    #     with allure.step("expected banner: 'Enter Account Information'"):
+    #         Logger.debug("Waiting for 'Enter Account Information' header")
+    #         return self.wait.until(EC.visibility_of_element_located(self.ACCOUNT_INFO_BANNER)).is_displayed()
 
     def fill_user_data_form(self, user: UserData):
         self.driver.find_element(*self.GENDER_RADIO_BUTTON).click()

@@ -1,11 +1,9 @@
-import random
-
 import allure
 from selenium.webdriver.common.by import By
-from selenium.webdriver.ie.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
+from pages.register_page import RegisterPage
 from utils.logger import Logger
 
 
@@ -27,7 +25,7 @@ class SignupPage:
             EC.visibility_of_element_located((self.SIGNUP_HEADER))).is_displayed()
 
     @allure.step("Fill out the sing in form: name and email")
-    def fill_form_for_signup_user(self,name,email):
+    def fill_form_for_signup_user(self, name, email):
         self.driver.find_element(*self.NAME_INPUT).send_keys(name)
         Logger.info(f"Entered signup name: {name}")
         self.driver.find_element(*self.EMAIL_INPUT).send_keys(email)
@@ -36,8 +34,8 @@ class SignupPage:
     @allure.step("Click on the 'Sign Up' button")
     def click_submit_button(self):
         signup_button = self.driver.find_element(*self.SIGNUP_BUTTON).click()
+        return RegisterPage(self.driver)
 
-    @allure.step("Check that the 'Enter Account Information' banner is displayed")
-    def is_account_info_banner_is_visiable(self):
-        return self.wait.until(EC.visibility_of_element_located(self.ACCOUNT_INFO_BANNER)).is_displayed()
-
+    # @allure.step("Check that the 'Enter Account Information' banner is displayed")
+    # def is_account_info_banner_is_visiable(self):
+    #     return self.wait.until(EC.visibility_of_element_located(self.ACCOUNT_INFO_BANNER)).is_displayed()

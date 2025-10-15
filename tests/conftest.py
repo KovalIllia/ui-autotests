@@ -1,5 +1,6 @@
 import os
-
+from random import random
+import random
 import pytest
 from faker import Faker
 from selenium import webdriver
@@ -7,6 +8,7 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 
+from pages import home_page
 from pages.home_page import HomePage
 from utils.data_generators import generate_password
 from utils.logger import Logger
@@ -65,3 +67,25 @@ def get_home_page(driver):
     assert home_page.has_expected_url(), "URL is incorrect"
 
     return home_page
+
+
+@pytest.fixture(scope="function")
+def get_signup_page(get_home_page):
+    signup_page = get_home_page.click_signup_login()
+    assert signup_page.is_loaded(), "Signup page did not load"
+    return signup_page
+
+
+@pytest.fixture(scope="function")
+def get_register_page(get_signup_page,fake):
+    name = fake.first_name()
+    email = f"testuser{random.randint(1, 1000)}@gmail.com"
+
+    signup_page=get_signup_page
+    signup_page.fill_form_for_signup_user(name, email)
+
+    register_page=signup_page.click_submit_button()
+    Logger.info(f"User signed up with name: {name}, email: {email}")
+
+    assert register_page.is_account_info_banner_is_visiable(), "Account info banner not visible"
+    return register_page

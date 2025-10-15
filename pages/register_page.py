@@ -4,7 +4,6 @@ from selenium.webdriver.ie.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-from tests.conftest import password
 from utils.form_helper import FormHelper
 from utils.logger import Logger
 
@@ -47,7 +46,7 @@ class RegisterPage:
             gender_button = self.driver.find_element(*self.GENDER_RADIO_BUTTON).click()
 
     def fill_password(self, password):
-        password = self.driver.find_element(*self.PASSWORD).send_keys(password)
+        self.driver.find_element(*self.PASSWORD).send_keys(password)
 
     def select_random_day(self):
         return self.form.select_random_day()
