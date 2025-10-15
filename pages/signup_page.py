@@ -6,7 +6,6 @@ from selenium.webdriver.ie.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-from tests.conftest import fake
 from utils.logger import Logger
 
 

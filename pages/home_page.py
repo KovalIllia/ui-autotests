@@ -4,7 +4,7 @@ from selenium.webdriver.ie.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from tests.conftest import driver
+from pages.signup_page import SignupPage
 
 
 class HomePage:
@@ -36,3 +36,5 @@ class HomePage:
     @allure.step("click to button 'Signup/Login'")
     def click_signup_login(self):
        self.wait.until(EC.element_to_be_clickable(self.SIGNUP_LOGIN_BUTTON)).click()
+       """return new page"""
+       return SignupPage(self.driver)

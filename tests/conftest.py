@@ -7,6 +7,7 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 
+from pages.home_page import HomePage
 from utils.data_generators import generate_password
 from utils.logger import Logger
 
@@ -52,3 +53,15 @@ def pytest_runtest_makereport(item, call):
         Logger.info(f"Test {item.nodeid} finished: {outcome}")
         if call.excinfo is not None:
             Logger.error(f"Failure in test {item.nodeid}: {call.excinfo}")
+
+
+@pytest.fixture(scope="function")
+def get_home_page(driver):
+    Logger.info("Navigating to home page")
+    home_page = HomePage(driver)
+    home_page.open()
+
+    assert home_page.is_loaded(),"Home page did not load properly"
+    assert home_page.has_expected_url(), "URL is incorrect"
+
+    return home_page

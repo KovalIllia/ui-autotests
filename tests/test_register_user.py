@@ -16,10 +16,12 @@ def test_register_user(driver,fake,password):
     assert home_page.has_expected_url(), "URL is incorrect"
 
     Logger.info("Clicking on Signup/Login button")
-    home_page.click_signup_login()
+
+    # home_page.click_signup_login()
+    # signup_page=SignupPage(driver)
+    signup_page = home_page.click_signup_login()
 
 
-    signup_page=SignupPage(driver)
     assert signup_page.is_loaded(),"Signup page did not load"
 
     name = fake.first_name()

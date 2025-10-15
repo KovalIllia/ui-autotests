@@ -4,18 +4,11 @@ from pages.signup_page import SignupPage
 from utils.logger import Logger
 
 
-def test_signup_user(driver,fake):
+def test_signup_user(driver,fake,get_home_page):
     Logger.info("Navigating to home page")
-    home_page=HomePage(driver)
-    home_page.open()
+    home_page=get_home_page
 
-    assert home_page.has_expected_url(), "URL is incorrect"
-    assert home_page.has_expected_url(), "URL is incorrect"
-
-    Logger.info("Clicking on Signup/Login button")
-    home_page.click_signup_login()
-
-    signup_page=SignupPage(driver)
+    signup_page=home_page.click_signup_login()
     assert signup_page.is_loaded(),"Signup page did not load"
 
     name = fake.first_name()
