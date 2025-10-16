@@ -6,6 +6,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from utils.form_helper import FormHelper
 from utils.logger import Logger
+from utils.user_data import UserData
 
 
 class RegisterPage:
@@ -40,58 +41,28 @@ class RegisterPage:
             Logger.debug("Waiting for 'Enter Account Information' header")
             return self.wait.until(EC.visibility_of_element_located(self.ACCOUNT_INFO_BANNER)).is_displayed()
 
-    @allure.step("Fill out the registration form with valid data.")
-    def choose_gender_button(self):
-        with allure.step("expected banner: 'Enter Account Information'"):
-            gender_button = self.driver.find_element(*self.GENDER_RADIO_BUTTON).click()
+    def fill_user_data_form(self, user: UserData):
+        self.driver.find_element(*self.GENDER_RADIO_BUTTON).click()
 
-    def fill_password(self, password):
-        self.driver.find_element(*self.PASSWORD).send_keys(password)
+        self.driver.find_element(*self.PASSWORD).send_keys(user.password)
 
-    def select_random_day(self):
-        return self.form.select_random_day()
+        self.form.select_random_day()
+        self.form.select_random_month()
+        self.form.select_random_year()
 
-    def select_random_month(self):
-        return self.form.select_random_month()
+        self.driver.find_element(*self.NEWSLETTER_CHECKBOX).click()
+        self.driver.find_element(*self.SPECIAL_OFFERS_CHECKBOX).click()
 
-    def select_random_year(self):
-        return self.form.select_random_year()
-
-    def newsletter_checkbox(self):
-        newsletter_checkbox = self.driver.find_element(*self.NEWSLETTER_CHECKBOX).click()
-
-    def special_offers_checkbox(self):
-        special_offers_checkbox = self.driver.find_element(*self.SPECIAL_OFFERS_CHECKBOX).click()
-
-    def fill_first_name(self, first_name: str):
-        first_name = self.driver.find_element(*self.FIRST_NAME).send_keys(first_name)
-
-    def fill_last_name(self, last_name: str):
-        last_name = self.driver.find_element(*self.LAST_NAME).send_keys(last_name)
-
-    def fill_company(self, company: str):
-        company = self.driver.find_element(*self.COMPANY).send_keys(company)
-
-    def fill_address(self, address: str):
-        address = self.driver.find_element(*self.ADDRESS).send_keys(address)
-
-    def fill_secondary_address(self, address: str):
-        secondary_address = self.driver.find_element(*self.SECONDARY_ADDRESS).send_keys(address)
-
-    def select_random_country(self):
-        return self.form.select_random_country()
-
-    def fill_state(self, state: str):
-        state = self.driver.find_element(*self.STATE).send_keys(state)
-
-    def fill_city(self, city: str):
-        city = self.driver.find_element(*self.CITY).send_keys(city)
-
-    def fill_zipcode(self, zipcode: str):
-        zipcode = self.driver.find_element(*self.ZIPCODE).send_keys(zipcode)
-
-    def fill_mobile_number(self, mobile_number: str):
-        self.driver.find_element(*self.MOBILE_NUMBER).send_keys(mobile_number)
+        self.driver.find_element(*self.FIRST_NAME).send_keys(user.first_name)
+        self.driver.find_element(*self.LAST_NAME).send_keys(user.last_name)
+        self.driver.find_element(*self.COMPANY).send_keys(user.company)
+        self.driver.find_element(*self.ADDRESS).send_keys(user.address)
+        self.driver.find_element(*self.SECONDARY_ADDRESS).send_keys(user.secondary_address)
+        self.form.select_random_country()
+        self.driver.find_element(*self.STATE).send_keys(user.state)
+        self.driver.find_element(*self.CITY).send_keys(user.city)
+        self.driver.find_element(*self.ZIPCODE).send_keys(user.zipcode)
+        self.driver.find_element(*self.MOBILE_NUMBER).send_keys(user.mobile)
 
     def create_account_button(self):
         self.driver.find_element(*self.CREATE_ACCOUNT_BUTTON).click()
