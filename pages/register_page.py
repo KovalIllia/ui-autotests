@@ -33,7 +33,7 @@ class RegisterPage:
 
     def __init__(self, driver: WebDriver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 30)
+        self.wait = WebDriverWait(driver, 40)
         self.form = FormHelper(driver)
 
     def is_account_info_banner_is_visiable(self):

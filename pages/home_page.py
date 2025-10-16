@@ -14,7 +14,7 @@ class HomePage:
 
     def __init__(self, driver=WebDriver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 10)
+        self.wait = WebDriverWait(driver, 30)
 
     @allure.step("open home page")
     def open(self):

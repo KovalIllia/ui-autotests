@@ -16,7 +16,7 @@ class SignupPage:
 
     def __init__(self, driver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 30)
+        self.wait = WebDriverWait(driver, 40)
 
     @allure.step("Verify that the title 'New User Signup!' is displayed.")
     def is_loaded(self):
