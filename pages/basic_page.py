@@ -10,7 +10,7 @@ from utils.logger import Logger
 
 
 class BasicPage:
-    URL = "http://automationexercise.com"
+    URL = "https://automationexercise.com/"
 
     EXPECTED_LOGO = (By.XPATH, "//img[@src='/static/images/home/logo.png']")
     HOME_BUTTON = (By.XPATH, "//a[i[@class='fa fa-home']]")
@@ -25,7 +25,7 @@ class BasicPage:
 
     def __init__(self, driver: WebDriver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 10)
+        self.wait = WebDriverWait(driver, 40)
         self.form = FormHelper(driver)
 
     @allure.step("Opening the start page (URL)")

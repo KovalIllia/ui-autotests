@@ -4,12 +4,13 @@ from selenium.webdriver.ie.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
+from pages.basic_page import BasicPage
 from utils.form_helper import FormHelper
 from utils.logger import Logger
 from utils.user_data import UserData
 
 
-class RegisterPage:
+class RegisterPage(BasicPage):
     ACCOUNT_INFO_BANNER = (By.XPATH, "//b[contains(text(),'Enter Account Information')]")
     GENDER_RADIO_BUTTON = (By.XPATH, "//input[@type='radio' and @value='Mr']")
     PASSWORD = (By.XPATH, "//input[@type='password' and @data-qa='password']")
@@ -30,11 +31,6 @@ class RegisterPage:
     ACCOUNT_CREATED_BANNER = (
         By.XPATH, "//h2[@class='title text-center']//b[contains(text(), 'Account Created!')]"
     )
-
-    def __init__(self, driver: WebDriver):
-        self.driver = driver
-        self.wait = WebDriverWait(driver, 40)
-        self.form = FormHelper(driver)
 
     def is_account_info_banner_is_visiable(self):
         with allure.step("expected banner: 'Enter Account Information'"):
