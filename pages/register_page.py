@@ -32,36 +32,37 @@ class RegisterPage(BasicPage):
         By.XPATH, "//h2[@class='title text-center']//b[contains(text(), 'Account Created!')]"
     )
 
-    def is_account_info_banner_is_visiable(self):
-        with allure.step("expected banner: 'Enter Account Information'"):
-            Logger.debug("Waiting for 'Enter Account Information' header")
-            return self.wait.until(EC.visibility_of_element_located(self.ACCOUNT_INFO_BANNER)).is_displayed()
+    @allure.step("expected banner: 'Enter Account Information'")
+    def is_loaded(self):
+        Logger.debug("Waiting for 'Enter Account Information' header")
+        return self.wait.until(EC.visibility_of_element_located((self.ACCOUNT_INFO_BANNER))).is_displayed()
+
 
     def fill_user_data_form(self, user: UserData):
-        self.driver.find_element(*self.GENDER_RADIO_BUTTON).click()
-
-        self.driver.find_element(*self.PASSWORD).send_keys(user.password)
+        Logger.info(f"Filling out registration form for user: {user.first_name}")
+        self.wait.until(EC.element_to_be_clickable(self.GENDER_RADIO_BUTTON)).click()
+        self.wait.until(EC.visibility_of_element_located(self.PASSWORD)).send_keys(user.password)
 
         self.form.select_random_day()
         self.form.select_random_month()
         self.form.select_random_year()
 
-        self.driver.find_element(*self.NEWSLETTER_CHECKBOX).click()
-        self.driver.find_element(*self.SPECIAL_OFFERS_CHECKBOX).click()
-
-        self.driver.find_element(*self.FIRST_NAME).send_keys(user.first_name)
-        self.driver.find_element(*self.LAST_NAME).send_keys(user.last_name)
-        self.driver.find_element(*self.COMPANY).send_keys(user.company)
-        self.driver.find_element(*self.ADDRESS).send_keys(user.address)
-        self.driver.find_element(*self.SECONDARY_ADDRESS).send_keys(user.secondary_address)
+        self.wait.until(EC.element_to_be_clickable(self.NEWSLETTER_CHECKBOX)).click()
+        self.wait.until(EC.element_to_be_clickable(self.SPECIAL_OFFERS_CHECKBOX)).click()
+        self.wait.until(EC.visibility_of_element_located(self.FIRST_NAME)).send_keys(user.first_name)
+        self.wait.until(EC.visibility_of_element_located(self.LAST_NAME)).send_keys(user.last_name)
+        self.wait.until(EC.visibility_of_element_located(self.COMPANY)).send_keys(user.company)
+        self.wait.until(EC.visibility_of_element_located(self.ADDRESS)).send_keys(user.address)
+        self.wait.until(EC.visibility_of_element_located(self.SECONDARY_ADDRESS)).send_keys(user.secondary_address)
         self.form.select_random_country()
-        self.driver.find_element(*self.STATE).send_keys(user.state)
-        self.driver.find_element(*self.CITY).send_keys(user.city)
-        self.driver.find_element(*self.ZIPCODE).send_keys(user.zipcode)
-        self.driver.find_element(*self.MOBILE_NUMBER).send_keys(user.mobile)
+        self.wait.until(EC.visibility_of_element_located(self.STATE)).send_keys(user.state)
+        self.wait.until(EC.visibility_of_element_located(self.CITY)).send_keys(user.city)
+        self.wait.until(EC.visibility_of_element_located(self.ZIPCODE)).send_keys(user.zipcode)
+        self.wait.until(EC.visibility_of_element_located(self.MOBILE_NUMBER)).send_keys(user.mobile)
 
     def create_account_button(self):
-        self.driver.find_element(*self.CREATE_ACCOUNT_BUTTON).click()
+        self.wait.until(EC.element_to_be_clickable(self.CREATE_ACCOUNT_BUTTON)).click()
+        Logger.info("Clicked 'Create Account' button.")
 
     @allure.step("Check the message about successful registration")
     def create_account_banner_is_visiable(self):

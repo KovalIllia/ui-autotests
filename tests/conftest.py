@@ -87,5 +87,5 @@ def get_register_page(get_signup_page,fake):
     register_page=signup_page.click_submit_button()
     Logger.info(f"User signed up with name: {name}, email: {email}")
 
-    assert register_page.is_account_info_banner_is_visiable(), "Account info banner not visible"
+    assert register_page.is_loaded(), "Account info banner not visible"
     return register_page
