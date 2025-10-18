@@ -1,18 +1,22 @@
 import os
-from random import random
 import random
+
 import pytest
 from faker import Faker
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.options import Options
 
-from pages import home_page
 from pages.home_page import HomePage
 from utils.data_generators import generate_password
 from utils.logger import Logger
+from faker import Faker
 
+
+@pytest.fixture(scope="function")
+def faker():
+    return Faker()
 
 @pytest.fixture(scope="function")
 def driver():
@@ -31,22 +35,25 @@ def driver():
     yield driver
     driver.quit()
 
+
 @pytest.fixture(scope="function")
 def fake():
     return Faker()
 
+
 @pytest.fixture(scope="function")
-def password()->str:
+def password() -> str:
     return generate_password()
 
 
 @pytest.fixture(autouse=True)
 def test_logger(request):
-    nodeid=request.node.nodeid
-    os.environ["PYTEST_CURRENT_TEST"]=nodeid
+    nodeid = request.node.nodeid
+    os.environ["PYTEST_CURRENT_TEST"] = nodeid
     Logger.start_test(nodeid)
     Logger.info(f"Starting test: {nodeid}")
     yield
+
 
 def pytest_runtest_makereport(item, call):
     from utils.logger import Logger
@@ -63,7 +70,7 @@ def get_home_page(driver):
     home_page = HomePage(driver)
     home_page.open()
 
-    assert home_page.is_loaded(),"Home page did not load properly"
+    assert home_page.is_loaded(), "Home page did not load properly"
     assert home_page.has_expected_url(), "URL is incorrect"
 
     return home_page
@@ -77,15 +84,25 @@ def get_signup_page(get_home_page):
 
 
 @pytest.fixture(scope="function")
-def get_register_page(get_signup_page,fake):
-    name = fake.first_name()
-    email = f"testuser{random.randint(1, 1000)}@gmail.com"
+def get_register_page(get_signup_page, fake,generated_signup_data):
+    name = generated_signup_data["name"]
+    email = generated_signup_data["email"]
 
-    signup_page=get_signup_page
+    signup_page = get_signup_page
     signup_page.fill_form_for_signup_user(name, email)
 
-    register_page=signup_page.click_submit_button()
+    register_page = signup_page.click_submit_button()
     Logger.info(f"User signed up with name: {name}, email: {email}")
 
     assert register_page.is_loaded(), "Account info banner not visible"
-    return register_page
+    return register_page,generated_signup_data
+
+
+@pytest.fixture(scope="function")
+def generated_signup_data(fake):
+    name = fake.first_name()
+    email = f"testuser{random.randint(1, 1000)}@gmail.com"
+    signup_data = {"name": name,
+                   "email": email}
+    Logger.info(f"Generated signup data: Name:{name}, email:{email}")
+    return signup_data
