@@ -46,13 +46,18 @@ def password() -> str:
     return generate_password()
 
 
-@pytest.fixture(autouse=True)
-def test_logger(request):
-    nodeid = request.node.nodeid
-    os.environ["PYTEST_CURRENT_TEST"] = nodeid
-    Logger.start_test(nodeid)
-    Logger.info(f"Starting test: {nodeid}")
-    yield
+def pytest_runtest_setup(item):
+    nodeId=item.nodeid
+    Logger.start_test(nodeId)
+    Logger.info(f"Starting setup for test: {nodeId}")
+
+# @pytest.fixture(autouse=True)
+# def test_logger(request):
+#     nodeid = request.node.nodeid
+#     os.environ["PYTEST_CURRENT_TEST"] = nodeid
+#     Logger.start_test(nodeid)
+#     Logger.info(f"Starting test: {nodeid}")
+#     yield
 
 
 def pytest_runtest_makereport(item, call):
@@ -63,10 +68,13 @@ def pytest_runtest_makereport(item, call):
         if call.excinfo is not None:
             Logger.error(f"Failure in test {item.nodeid}: {call.excinfo}")
 
+def pytest_runtest_teardown(item, nextitem):
+    Logger.file_name = None
+
 
 @pytest.fixture(scope="function")
 def get_home_page(driver):
-    Logger.info("Navigating to home page")
+    # Logger.info("Navigating to home page")
     home_page = HomePage(driver)
     home_page.open()
 

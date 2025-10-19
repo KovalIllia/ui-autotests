@@ -1,11 +1,8 @@
 import allure
 from selenium.webdriver.common.by import By
-from selenium.webdriver.ie.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
 
 from pages.basic_page import BasicPage
-from utils.form_helper import FormHelper
 from utils.logger import Logger
 from utils.user_data import UserData
 
@@ -37,7 +34,6 @@ class RegisterPage(BasicPage):
         Logger.debug("Waiting for 'Enter Account Information' header")
         return self.wait.until(EC.visibility_of_element_located((self.ACCOUNT_INFO_BANNER))).is_displayed()
 
-
     def fill_user_data_form(self, user: UserData):
         Logger.info(f"Filling out registration form for user: {user.first_name}")
         self.wait.until(EC.element_to_be_clickable(self.GENDER_RADIO_BUTTON)).click()
@@ -59,6 +55,16 @@ class RegisterPage(BasicPage):
         self.wait.until(EC.visibility_of_element_located(self.CITY)).send_keys(user.city)
         self.wait.until(EC.visibility_of_element_located(self.ZIPCODE)).send_keys(user.zipcode)
         self.wait.until(EC.visibility_of_element_located(self.MOBILE_NUMBER)).send_keys(user.mobile)
+        Logger.info(f"Data used: Name={user.first_name}, "
+                    f"last_name: {user.last_name}, "
+                    f"Pass={user.password}, "
+                    f"City={user.city}, "
+                    f"Address={user.address[:20]}, "
+                    f"secondary_adress: {user.secondary_address[:30]}, "
+                    f"state: {user.state}, "
+                    f"zipcode: {user.zipcode}, "
+                    f"mobile_number: {user.mobile}"
+                    )
 
     def create_account_button(self):
         self.wait.until(EC.element_to_be_clickable(self.CREATE_ACCOUNT_BUTTON)).click()

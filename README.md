@@ -34,24 +34,6 @@ The tests are written against [automationexercise.com](http://automationexercise
 * Parallel execution support with `pytest-xdist`
 * CI/CD-ready with Docker integration
 
----
-
-## 📂 Project Structure
-
-```
-ui-autotests/
-│── pages/                  # Page Object classes
-│── tests/                  # Test cases
-│── utils/                  # Helpers (logger, data generators, etc.)
-│── output/
-│   ├── allure/             # Allure results & reports
-│   ├── reports/            # HTML reports
-│   └── scripts/            # Run scripts (pytest + allure)
-│── pytest.ini              # Pytest configuration
-│── requirements.txt        # Python dependencies
-│── Dockerfile              # Docker setup
-└── README.md               # Project documentation
-```
 
 ---
 
