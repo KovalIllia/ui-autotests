@@ -1,7 +1,7 @@
-# yamllint disable rule:truthy
 ---
 name: Pytest Workflow with Allure History
 
+# yamllint disable-line rule:truthy
 on:
   push:
     branches:
@@ -17,19 +17,16 @@ jobs:
       id-token: write
 
     steps:
-      # 1. Клонування репозиторію та отримання повної історії
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # 2. Встановлення Python та залежностей
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.9"
 
-      # 3. Кешування та встановлення залежностей
       - name: Cache dependencies
         uses: actions/cache@v4
         with:
@@ -43,31 +40,39 @@ jobs:
           pip install -r requirements.txt
           pip install pytest allure-pytest pytest-html
 
-      # 4. Встановлення Google Chrome
       - name: Install Google Chrome
         run: |
           sudo apt-get update
           sudo apt-get install -y wget gnupg unzip
-          wget -q -O - \
-            https://dl.google.com/linux/linux_signing_key.pub | \
-            sudo apt-key add -
-          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ \
-            stable main" | \
+          GOOGLE_KEY="https://dl-ssl.google.com/linux/linux_signing_key.pub"
+          wget -q -O - $GOOGLE_KEY | sudo apt-key add -
+          CHROME_REPO="deb [arch=amd64] "
+          CHROME_REPO+="http://dl.google.com/linux/chrome/deb/ stable main"
+          echo $CHROME_REPO | \
             sudo tee /etc/apt/sources.list.d/google-chrome.list
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
 
-      # 5. Встановлення Allure CLI
+      - name: Install ChromeDriver
+        run: |
+          CHROME_VERSION=$(google-chrome-stable --version | awk '{print $3}')
+          CD_URL="https://chromedriver.storage.googleapis.com"
+          CD_VERSION=$(curl -s "$CD_URL/LATEST_RELEASE_$CHROME_VERSION")
+          wget -q "$CD_URL/$CD_VERSION/chromedriver_linux64.zip"
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
+
       - name: Install Allure CLI
         run: |
           sudo apt-get update
           sudo apt-get install -y default-jre
-          URL="https://github.com/allure-framework/allure2/releases/\download/2.27.0/allure-2.27.0.tgz"
-          curl -Lo allure.tgz "$URL"
-          sudo tar -xzf allure.tgz -C /opt/
+          ALLURE_URL="https://github.com/allure-framework/allure2"
+          ALLURE_FILE="allure-2.27.0.tgz"
+          wget "$ALLURE_URL/releases/download/2.27.0/$ALLURE_FILE"
+          sudo tar -xzf $ALLURE_FILE -C /opt/
           sudo ln -sf /opt/allure-2.27.0/bin/allure /usr/bin/allure
 
-      # 6. Отримання попередньої історії Allure з gh-pages
       - name: Get previous Allure history
         uses: actions/checkout@v4
         if: always()
@@ -76,7 +81,6 @@ jobs:
           ref: gh-pages
           path: gh-pages-history
 
-      # 7. Запуск Pytest і копіювання історії
       - name: Run pytest and copy history
         run: |
           mkdir -p allure-results
@@ -86,13 +90,18 @@ jobs:
           fi
           pytest -s --alluredir=allure-results tests/
 
-      # 8. Генерація Allure-звіту з історією
       - name: Generate Allure Report
         run: |
+          if [ -d "gh-pages-history/history" ]; then
+            cp -r gh-pages-history/history allure-results/ || true
+          fi
           allure generate allure-results --clean -o _site
+          mkdir -p _site/history
+          if [ -d "allure-results/history" ]; then
+            cp -r allure-results/history _site/ || true
+          fi
           touch _site/.nojekyll
 
-      # 9. Деплой звіту на GitHub Pages
       - name: Deploy reports to GitHub Pages
         if: ${{ github.actor != 'nektos/act' }}
         uses: peaceiris/actions-gh-pages@v4
