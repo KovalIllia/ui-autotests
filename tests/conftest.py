@@ -1,6 +1,6 @@
 import os
 import random
-from datetime import time
+import time
 
 import pytest
 from faker import Faker
@@ -110,7 +110,7 @@ def get_register_page(get_signup_page, fake,generated_signup_data):
 @pytest.fixture(scope="function")
 def generated_signup_data(fake):
     name = fake.first_name()
-    email = f"testuser{random.randint(10000, 99999)}_{int(time.time())}@gmail.com"
+    email = f"testuser{random.randint(10000, 99999)}@gmail.com"
     signup_data = {"name": name,
                    "email": email}
     Logger.info(f"Generated signup data: Name:{name}, email:{email}")
