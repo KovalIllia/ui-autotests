@@ -15,15 +15,7 @@ class Logger:
 
     os.makedirs(LOG_DIR, exist_ok=True)
 
-    # default file (will be overridden per test by start_test)
-    # file_name = f"{LOG_DIR}/log_" + datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".log"
     file_name = None
-    # @classmethod
-    # def start_test(cls, test_nodeid: str):
-    #     """Call at test start to create per-test logfile (sanitized name)."""
-    #     safe_name = test_nodeid.replace("::", "__").replace("/", "_").replace(" ", "_")
-    #     cls.file_name = f"{cls.LOG_DIR}/log_{safe_name}_{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log"
-    #     cls.info(f"=== START TEST: {test_nodeid} ===")
     @classmethod
     def start_test(cls, test_nodeid: str):
         safe_name = test_nodeid.replace("::", "__").replace("/", "_").replace(" ", "_")
