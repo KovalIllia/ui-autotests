@@ -40,11 +40,43 @@ jobs:
           pip install -r requirements.txt
           pip install pytest allure-pytest pytest-html
 
-      - name: Setup Chrome and ChromeDriver
-        uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: stable
-          install-chromedriver: true
+      - name: Install Google Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget gnupg unzip
+          GOOGLE_KEY="https://dl-ssl.google.com/linux/linux_signing_key.pub"
+          wget -q -O - $GOOGLE_KEY | sudo apt-key add -
+          CHROME_LIST="/etc/apt/sources.list.d/google-chrome.list"
+          CHROME_REPO="deb [arch=amd64] "
+          CHROME_REPO="${CHROME_REPO}http://dl.google.com/linux/chrome/deb/"
+          CHROME_REPO="${CHROME_REPO} stable main"
+          echo $CHROME_REPO | sudo tee $CHROME_LIST
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+      - name: Install ChromeDriver
+        run: |
+          CHROME_VERSION=$(google-chrome-stable --version | \
+            awk '{print $3}' | cut -d '.' -f 1)
+          echo "Chrome major version: $CHROME_VERSION"
+
+          BASE_URL="https://googlechromelabs.github.io"
+          RELEASE_URL="${BASE_URL}/chrome-for-testing"
+          CHROMEDRIVER_VERSION=$(curl -s \
+            "${RELEASE_URL}/LATEST_RELEASE_${CHROME_VERSION}")
+          echo "ChromeDriver version: $CHROMEDRIVER_VERSION"
+
+          STORAGE_URL="https://storage.googleapis.com"
+          DOWNLOAD_PATH="chrome-for-testing-public"
+          DOWNLOAD_URL="${STORAGE_URL}/${DOWNLOAD_PATH}"
+          DOWNLOAD_URL="${DOWNLOAD_URL}/${CHROMEDRIVER_VERSION}"
+          DOWNLOAD_URL="${DOWNLOAD_URL}/linux64/chromedriver-linux64.zip"
+
+          wget -q "$DOWNLOAD_URL" -O chromedriver.zip
+          unzip -q chromedriver.zip
+          sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
+          chromedriver --version
 
       - name: Install Allure CLI
         run: |
@@ -56,7 +88,7 @@ jobs:
           sudo tar -xzf $ALLURE_FILE -C /opt/
           sudo ln -sf /opt/allure-2.27.0/bin/allure /usr/bin/allure
 
-      - name: Get previous Allure history
+      - name: Download previous Allure history
         uses: actions/checkout@v4
         if: always()
         continue-on-error: true
@@ -64,7 +96,7 @@ jobs:
           ref: gh-pages
           path: gh-pages-history
 
-      - name: Run pytest and copy history
+      - name: Run pytest with Allure
         run: |
           mkdir -p allure-results
           if [ -d "gh-pages-history/history" ]; then
@@ -75,18 +107,15 @@ jobs:
 
       - name: Generate Allure Report
         run: |
-          if [ -d "gh-pages-history/history" ]; then
-            cp -r gh-pages-history/history allure-results/ || true
-          fi
           allure generate allure-results --clean -o _site
-          mkdir -p _site/history
-          if [ -d "allure-results/history" ]; then
-            cp -r allure-results/history _site/ || true
+          if [ -d "_site/history" ]; then
+            echo "History preserved successfully"
+          else
+            echo "No history found in report"
           fi
           touch _site/.nojekyll
 
-      - name: Deploy reports to GitHub Pages
-        if: ${{ github.actor != 'nektos/act' }}
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
