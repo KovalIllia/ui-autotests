@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
+from pages import register_page
 from pages.basic_page import BasicPage
 from pages.register_page import RegisterPage
 from utils.logger import Logger
@@ -33,8 +34,17 @@ class SignupPage(BasicPage):
     @allure.step("Click on the 'Sign Up' button")
     def click_submit_button(self):
         self.wait.until(EC.element_to_be_clickable(self.SIGNUP_BUTTON)).click()
-        Logger.info("Clicked on 'Sign Up' button.")
-        return RegisterPage(self.driver)
+        Logger.info("Clicked on 'Sign Up' button. Waiting for Register Page to load...")
+
+        from pages.register_page import RegisterPage
+        register_page = RegisterPage(self.driver)
+
+        WebDriverWait(self.driver, 20).until(
+            EC.visibility_of_element_located(register_page.ACCOUNT_INFO_BANNER)
+        )
+
+        Logger.info("Register Page loaded successfully.")
+        return register_page
 
     @allure.step("Get current URL")
     def get_current_signup_url(self):
