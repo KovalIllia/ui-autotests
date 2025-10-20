@@ -68,6 +68,47 @@ Or simply run prepared script:
 ./output/scripts/run_tests.sh
 ```
 
+
+
+# ☁️ CI/CD Workflow Simulation (Advanced)
+
+To test GitHub Actions Workflow locally before pushing to the master branch, the act tool is used. This allows you to simulate the entire CI pipeline in a Docker environment, ensuring that the CI configuration works flawlessly.
+
+This is a best practice to speed up the development cycle and avoid "CI bugs".
+
+### 1. Install act
+
+`curl -s https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash`
+
+This command downloads and installs the act binary.
+
+### 2. Image preparation Runner'а
+
+`act`--- uses Docker images to simulate a GitHub environment. This image (catthehacker/ubuntu:act-latest) is an optimized version for faster startup.
+
+`sudo docker pull catthehacker/ubuntu:act-latest`
+
+
+### 3. Launching a specific _**`Job`**_ with the correct **_`Runner`_**
+
+This command runs only the necessary job (`test`) from our Workflow `(.github/workflows/pytest.yml)`, використовуючи попередньо завантажений Docker-образ.
+
+`act:` The main command is `act.`
+
+`-P ubuntu-latest=...: ` -- Determines which Docker image to use for simulation `ubuntu-latest Runner'а`.
+
+`-j test:` Runs only the `job` named test (not all of the jobs in the file).
+
+`act -P ubuntu-latest=catthehacker/ubuntu:act-latest -j test`
+
+
+### 4.Restart (Fast Rerun)
+
+After the first run, act creates a container. To run Workflow again without recreating this container (and save time), use the flag `--reuse.`
+
+`act --reuse`
+
+
 ---
 
 ## 🐳 Run in Docker

@@ -40,28 +40,11 @@ jobs:
           pip install -r requirements.txt
           pip install pytest allure-pytest pytest-html
 
-      - name: Install Google Chrome
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget gnupg unzip
-          GOOGLE_KEY="https://dl-ssl.google.com/linux/linux_signing_key.pub"
-          wget -q -O - $GOOGLE_KEY | sudo apt-key add -
-          CHROME_REPO="deb [arch=amd64] "
-          CHROME_REPO+="http://dl.google.com/linux/chrome/deb/ stable main"
-          echo $CHROME_REPO | \
-            sudo tee /etc/apt/sources.list.d/google-chrome.list
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
-
-      - name: Install ChromeDriver
-        run: |
-          CHROME_VERSION=$(google-chrome-stable --version | awk '{print $3}')
-          CD_URL="https://chromedriver.storage.googleapis.com"
-          CD_VERSION=$(curl -s "$CD_URL/LATEST_RELEASE_$CHROME_VERSION")
-          wget -q "$CD_URL/$CD_VERSION/chromedriver_linux64.zip"
-          unzip chromedriver_linux64.zip
-          sudo mv chromedriver /usr/local/bin/
-          sudo chmod +x /usr/local/bin/chromedriver
+      - name: Setup Chrome and ChromeDriver
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+          install-chromedriver: true
 
       - name: Install Allure CLI
         run: |
