@@ -1,6 +1,7 @@
 import allure
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 from pages.basic_page import BasicPage
 from utils.logger import Logger
@@ -30,9 +31,16 @@ class RegisterPage(BasicPage):
     )
 
     @allure.step("expected banner: 'Enter Account Information'")
-    def is_loaded(self):
+    def is_loaded(self)->bool:
         Logger.debug("Waiting for 'Enter Account Information' header")
-        return self.wait.until(EC.visibility_of_element_located((self.ACCOUNT_INFO_BANNER))).is_displayed()
+        try:
+            banner = self.wait.until(
+                EC.visibility_of_element_located(self.ACCOUNT_INFO_BANNER)
+            )
+            return banner.is_displayed()
+        except Exception as e:
+            Logger.error(f"RegisterPage not loaded: {e}")
+            return False
 
     def fill_user_data_form(self, user: UserData):
         Logger.info(f"Filling out registration form for user: {user.first_name}")

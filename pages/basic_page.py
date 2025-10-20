@@ -25,7 +25,7 @@ class BasicPage:
 
     def __init__(self, driver: WebDriver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 50)
+        self.wait = WebDriverWait(driver, 40)
         self.form = FormHelper(driver)
 
     @allure.step("Opening the start page (URL)")
