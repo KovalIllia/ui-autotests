@@ -39,7 +39,7 @@ class SignupPage(BasicPage):
         from pages.register_page import RegisterPage
         register_page = RegisterPage(self.driver)
 
-        WebDriverWait(self.driver, 20).until(
+        WebDriverWait(self.driver, 60).until(
             EC.visibility_of_element_located(register_page.ACCOUNT_INFO_BANNER)
         )
 

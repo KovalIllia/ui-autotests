@@ -17,9 +17,8 @@ def test_signup_user(driver, fake, get_home_page,generated_signup_data):
     signup_page.fill_form_for_signup_user(name, email)
 
     register_page = signup_page.click_submit_button()
+
     assert register_page.is_loaded(), "Register Page (Enter Account Information) failed to load."
 
     Logger.info("Successfully navigated to Register Page after initial signup.")
-    # assert (
-    #     register_page.create_account_banner_is_visiable()
-    # ), "Account Created! banner not visible after successful submission."
+
