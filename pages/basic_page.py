@@ -1,6 +1,8 @@
 import allure
 from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webdriver import WebDriver  # Виправлено: використовуємо загальний тип WebDriver
+from selenium.webdriver.remote.webdriver import (
+    WebDriver,
+)  # Виправлено: використовуємо загальний тип WebDriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -8,19 +10,39 @@ from utils.form_helper import FormHelper
 from utils.logger import Logger
 
 
-
 class BasicPage:
     URL = "https://automationexercise.com/"
 
     EXPECTED_LOGO = (By.XPATH, "//img[@src='/static/images/home/logo.png']")
     HOME_BUTTON = (By.XPATH, "//a[i[@class='fa fa-home']]")
-    PRODUCTS_BUTTON = (By.XPATH, "//a[i[@class='material-icons card_travel'] and contains(text(), 'Products')]")
-    CART_BUTTON = (By.XPATH, "//a[i[@class='fa fa-shopping-cart']and contains(text(), 'Cart')]")
-    SIGNUP_LOGIN_BUTTON = (By.XPATH, "//a[i[@class='fa fa-lock']and contains(text(), ' Signup / Login')]")
-    TEST_CASES_BUTTON = (By.XPATH, "//a[i[@class='fa fa-list']and contains(text(), ' Test Cases')]")
-    API_TESTING_BUTTON = (By.XPATH, "//a[i[@class='fa fa-list']and contains(text(), ' API Testing')]")
-    VIDEO_TUTORIALS_BUTTON = (By.XPATH, "//a[i[@class='fa fa-youtube-play']and contains(text(), ' Video Tutorials')]")
-    CONTACT_US_BUTTON = (By.XPATH, "//a[i[@class='fa fa-envelope']and contains(text(), ' Contact us')]")
+    PRODUCTS_BUTTON = (
+        By.XPATH,
+        "//a[i[@class='material-icons card_travel'] and contains(text(), 'Products')]",
+    )
+    CART_BUTTON = (
+        By.XPATH,
+        "//a[i[@class='fa fa-shopping-cart']and contains(text(), 'Cart')]",
+    )
+    SIGNUP_LOGIN_BUTTON = (
+        By.XPATH,
+        "//a[i[@class='fa fa-lock']and contains(text(), ' Signup / Login')]",
+    )
+    TEST_CASES_BUTTON = (
+        By.XPATH,
+        "//a[i[@class='fa fa-list']and contains(text(), ' Test Cases')]",
+    )
+    API_TESTING_BUTTON = (
+        By.XPATH,
+        "//a[i[@class='fa fa-list']and contains(text(), ' API Testing')]",
+    )
+    VIDEO_TUTORIALS_BUTTON = (
+        By.XPATH,
+        "//a[i[@class='fa fa-youtube-play']and contains(text(), ' Video Tutorials')]",
+    )
+    CONTACT_US_BUTTON = (
+        By.XPATH,
+        "//a[i[@class='fa fa-envelope']and contains(text(), ' Contact us')]",
+    )
     FOOTER = (By.XPATH, "//footer[@id='footer']")
 
     def __init__(self, driver: WebDriver):
@@ -46,7 +68,9 @@ class BasicPage:
 
     @allure.step("Checking visibility of logo")
     def logo_is_visible(self) -> bool:
-        return self.wait.until(EC.visibility_of_element_located(self.EXPECTED_LOGO)).is_displayed()
+        return self.wait.until(
+            EC.visibility_of_element_located(self.EXPECTED_LOGO)
+        ).is_displayed()
 
     def _get_navigation_element_locators(self):
         return [
@@ -57,7 +81,7 @@ class BasicPage:
             self.TEST_CASES_BUTTON,
             self.API_TESTING_BUTTON,
             self.VIDEO_TUTORIALS_BUTTON,
-            self.CONTACT_US_BUTTON
+            self.CONTACT_US_BUTTON,
         ]
 
     @allure.step("Checking the visibility of all navigation bar elements")
@@ -71,12 +95,13 @@ class BasicPage:
             try:
                 self.wait.until(EC.visibility_of_element_located(locator))
             except:
-                Logger.error(f"Navigation element with locator {locator} is NOT visible.")
+                Logger.error(
+                    f"Navigation element with locator {locator} is NOT visible."
+                )
                 return False
 
         Logger.info("All navigation elements are visible.")
         return True
-
 
     @allure.step("Checking visibility of Footer")
     def is_footer_present(self) -> bool:

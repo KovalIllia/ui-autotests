@@ -14,21 +14,28 @@ class SignupPage(BasicPage):
     NAME_INPUT = (By.XPATH, "//input[@data-qa='signup-name']")
     EMAIL_INPUT = (By.XPATH, "//input[@data-qa='signup-email']")
     SIGNUP_BUTTON = (By.XPATH, "//button[@data-qa='signup-button']")
-    ACCOUNT_INFO_BANNER = (By.XPATH, "//b[contains(text(),'Enter Account Information')]")
-
+    ACCOUNT_INFO_BANNER = (
+        By.XPATH,
+        "//b[contains(text(),'Enter Account Information')]",
+    )
 
     @allure.step("Verify that the title 'New User Signup!' is displayed.")
     def is_loaded(self):
         Logger.debug("Waiting for 'New User Signup!' header")
         return self.wait.until(
-            EC.visibility_of_element_located((self.SIGNUP_HEADER))).is_displayed()
+            EC.visibility_of_element_located((self.SIGNUP_HEADER))
+        ).is_displayed()
 
     @allure.step("Fill out the sing in form: name and email")
     def fill_form_for_signup_user(self, name, email):
-        self.wait.until(EC.visibility_of_element_located(self.NAME_INPUT)).send_keys(name)
+        self.wait.until(EC.visibility_of_element_located(self.NAME_INPUT)).send_keys(
+            name
+        )
         Logger.info(f"Entered signup name: {name}")
 
-        self.wait.until(EC.visibility_of_element_located(self.EMAIL_INPUT)).send_keys(email)
+        self.wait.until(EC.visibility_of_element_located(self.EMAIL_INPUT)).send_keys(
+            email
+        )
         Logger.info(f"Entered email: {email}")
 
     @allure.step("Click on the 'Sign Up' button")
@@ -37,6 +44,7 @@ class SignupPage(BasicPage):
         Logger.info("Clicked on 'Sign Up' button. Waiting for Register Page to load...")
 
         from pages.register_page import RegisterPage
+
         register_page = RegisterPage(self.driver)
 
         WebDriverWait(self.driver, 60).until(

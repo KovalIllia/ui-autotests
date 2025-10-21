@@ -12,9 +12,12 @@ class HomePage(BasicPage):
 
     @allure.step("Verify home page is loaded")
     def is_loaded(self) -> bool:
-        return (self.has_expected_title() and
-                self.logo_is_visible() and
-                self.is_navigation_bar_fully_visible())
+        return (
+            self.has_expected_title()
+            and self.logo_is_visible()
+            and self.is_navigation_bar_fully_visible()
+        )
+
     Logger.info("Checking Home Page specific load conditions.")
 
     @allure.step("Click on 'Signup/Login' button")

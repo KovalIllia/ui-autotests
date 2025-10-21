@@ -4,7 +4,9 @@ from utils.logger import Logger
 from utils.user_data import UserData
 
 
-def test_register_user(driver,fake,password,get_register_page,generated_signup_data):
+def test_register_user(
+    driver, fake, password, get_register_page, generated_signup_data
+):
     Logger.info("Starting user registration test")
     register_page, signup_data = get_register_page
 

@@ -48,14 +48,42 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
+### 2.Install Chrome & ChromeDriver
+```
+## Install Google Chrome
+wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+sudo apt-get update
+sudo apt-get install -y google-chrome-stable
 
-### 2. Run tests locally
+## Install ChromeDriver (automatically detects Chrome version)
+CHROME_VERSION=$(google-chrome-stable --version | awk '{print $3}' | cut -d '.' -f 1)
+BASE_URL="https://googlechromelabs.github.io/chrome-for-testing"
+CHROMEDRIVER_VERSION=$(curl -s "${BASE_URL}/LATEST_RELEASE_${CHROME_VERSION}")
+DOWNLOAD_URL="https://storage.googleapis.com/chrome-for-testing-public/${CHROMEDRIVER_VERSION}/linux64/chromedriver-linux64.zip"
+
+wget -q "$DOWNLOAD_URL" -O chromedriver.zip
+unzip -q chromedriver.zip
+sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
+sudo chmod +x /usr/local/bin/chromedriver
+```
+
+### 3.Install Allure CLI
+```
+sudo apt-get install -y default-jre
+wget https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
+sudo tar -xzf allure-2.27.0.tgz -C /opt/
+sudo ln -sf /opt/allure-2.27.0/bin/allure /usr/bin/allure
+```
+
+
+### 4. Run tests locally
 
 ```bash
 pytest -v -s --alluredir=output/allure/allure-results
 ```
 
-### 3. Generate Allure report
+### 5. Generate Allure report
 
 ```bash
 allure generate output/allure/allure-results --clean -o output/allure/allure-report

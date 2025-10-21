@@ -4,7 +4,7 @@ from tests.conftest import generated_signup_data
 from utils.logger import Logger
 
 
-def test_signup_user(driver, fake, get_home_page,generated_signup_data):
+def test_signup_user(driver, fake, get_home_page, generated_signup_data):
     Logger.info("Navigating to home page")
     home_page = get_home_page
     Logger.info("Home Page is loaded via fixture")
@@ -18,7 +18,8 @@ def test_signup_user(driver, fake, get_home_page,generated_signup_data):
 
     register_page = signup_page.click_submit_button()
 
-    assert register_page.is_loaded(), "Register Page (Enter Account Information) failed to load."
+    assert (
+        register_page.is_loaded()
+    ), "Register Page (Enter Account Information) failed to load."
 
     Logger.info("Successfully navigated to Register Page after initial signup.")
-

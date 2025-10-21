@@ -4,7 +4,7 @@ WORKDIR /app
 COPY . /app/
 ENV PYTHONPATH=/app
 
-# Встановлення залежностей для запуску Chrome в Linux
+
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     wget \
@@ -33,23 +33,23 @@ RUN apt-get update && \
     unzip \
     && rm -rf /var/lib/apt/lists/*
 
-# Встановлення Google Chrome
+
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /usr/share/keyrings/google-chrome.gpg && \
     echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list && \
     apt-get update && \
     apt-get install -y google-chrome-stable
 
-# Встановлення ChromeDriver
+
 RUN wget https://chromedriver.storage.googleapis.com/$(wget -qO- https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip && \
     unzip chromedriver_linux64.zip -d /usr/bin && \
     chmod +x /usr/bin/chromedriver && \
     rm chromedriver_linux64.zip
 
-# Встановлення Python-залежностей
+
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install pytest allure-python-commons pytest-html pytest-xdist
 
-# Створення директорії для збереження результатів тестів
+
 RUN mkdir -p /output/test_result && chmod -R 777 /output/test_result
 
 ENV PYTHONDONTWRITEBYTECODE=1

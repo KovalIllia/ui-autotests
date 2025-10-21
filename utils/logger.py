@@ -2,33 +2,36 @@ import os
 import datetime
 import threading
 
+
 class LogLevel:
     INFO = "INFO"
     DEBUG = "DEBUG"
     WARNING = "WARNING"
     ERROR = "ERROR"
 
+
 class Logger:
     LOG_DIR = "./output/logs"
     _lock = threading.Lock()
 
-
     os.makedirs(LOG_DIR, exist_ok=True)
 
     file_name = None
+
     @classmethod
     def start_test(cls, test_nodeid: str):
         safe_name = test_nodeid.replace("::", "__").replace("/", "_").replace(" ", "_")
         cls.file_name = f"{cls.LOG_DIR}/log_{safe_name}_{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log"
         cls.info(f"=== START TEST: {test_nodeid} ===")
 
-
     @classmethod
     def write_log_to_file(cls, data: str, level: str = LogLevel.INFO):
         if cls.file_name is None:
             return
         if "test_result" in cls.file_name:
-            raise ValueError("Logger is trying to write to test_result. Check configuration!")
+            raise ValueError(
+                "Logger is trying to write to test_result. Check configuration!"
+            )
         log_line = f"[{level}] {datetime.datetime.now().isoformat()} - {data}\n"
         with cls._lock:
             with open(cls.file_name, "a", encoding="utf-8") as logger_file:
@@ -63,7 +66,9 @@ class Logger:
         cls.debug(data_to_add)
 
     @classmethod
-    def add_response(cls, response, body=None, endpoint_name: str = None, files_meta=None):
+    def add_response(
+        cls, response, body=None, endpoint_name: str = None, files_meta=None
+    ):
         data_to_add = ""
         if endpoint_name:
             data_to_add += f"Endpoint: {endpoint_name}\n"
@@ -76,4 +81,3 @@ class Logger:
             cls.error(data_to_add)
         else:
             cls.info(data_to_add)
-

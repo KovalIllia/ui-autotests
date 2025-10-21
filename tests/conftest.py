@@ -19,6 +19,7 @@ from faker import Faker
 def faker():
     return Faker()
 
+
 @pytest.fixture(scope="function")
 def driver():
     options = Options()
@@ -48,9 +49,10 @@ def password() -> str:
 
 
 def pytest_runtest_setup(item):
-    nodeId=item.nodeid
+    nodeId = item.nodeid
     Logger.start_test(nodeId)
     Logger.info(f"Starting setup for test: {nodeId}")
+
 
 # @pytest.fixture(autouse=True)
 # def test_logger(request):
@@ -63,11 +65,13 @@ def pytest_runtest_setup(item):
 
 def pytest_runtest_makereport(item, call):
     from utils.logger import Logger
+
     if call.when == "call":
         outcome = "PASSED" if call.excinfo is None else "FAILED"
         Logger.info(f"Test {item.nodeid} finished: {outcome}")
         if call.excinfo is not None:
             Logger.error(f"Failure in test {item.nodeid}: {call.excinfo}")
+
 
 def pytest_runtest_teardown(item, nextitem):
     Logger.file_name = None
@@ -93,7 +97,7 @@ def get_signup_page(get_home_page):
 
 
 @pytest.fixture(scope="function")
-def get_register_page(get_signup_page, fake,generated_signup_data):
+def get_register_page(get_signup_page, fake, generated_signup_data):
     name = generated_signup_data["name"]
     email = generated_signup_data["email"]
 
@@ -104,14 +108,13 @@ def get_register_page(get_signup_page, fake,generated_signup_data):
     Logger.info(f"User signed up with name: {name}, email: {email}")
 
     assert register_page.is_loaded(), "Account info banner not visible"
-    return register_page,generated_signup_data
+    return register_page, generated_signup_data
 
 
 @pytest.fixture(scope="function")
 def generated_signup_data(fake):
     name = fake.first_name()
     email = f"testuser{random.randint(10000, 99999)}@gmail.com"
-    signup_data = {"name": name,
-                   "email": email}
+    signup_data = {"name": name, "email": email}
     Logger.info(f"Generated signup data: Name:{name}, email:{email}")
     return signup_data
